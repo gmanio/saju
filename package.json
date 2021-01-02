@@ -10,6 +10,7 @@
     "autoprefixer": "^10.1.0",
     "cheerio": "^1.0.0-rc.5",
     "next": "latest",
+    "postcss": "^8.2.2",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "styled-components": "^5.0.0",

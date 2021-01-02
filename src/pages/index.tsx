@@ -1,41 +1,129 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import 'tailwindcss/tailwind.css';
+import ZodiacLoader from '../component/Loader';
 
 const Zodiac = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [dayType, setDayType] = useState('1');
+  const [ttiType, setTtiType] = useState('00');
   const [response, setResponse] = useState<any>(null);
-
-  useEffect(() => {
-    fetch('/api/fortune?day=0&tti=01')
+  const fetchData = () => {
+    setIsLoading(true);
+    fetch(`/api/fortune?day=${dayType}&tti=${ttiType}`)
       .then(async (res) => {
         const result = await res.json();
         setResponse(result);
+        setTimeout(()=>{
+          setIsLoading(false);
+        },1500);
+        
       })
       .catch((e) => {
         console.log(e);
+        setIsLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [ttiType, dayType]);
+
   return (
     <PageWrapper>
       <ZodiacWrapper>
         <NavigationWrapper>
-          <NavigationButton className={'bg-blue-600'}>어제</NavigationButton>
-          <NavigationTitle>xxxx</NavigationTitle>
-          <NavigationButton className={'bg-blue-600'}>내일</NavigationButton>
+          {dayType === '0' && (
+            <>
+              <NavigationButtonPadding>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </NavigationButtonPadding>
+              <NavigationTitle onClick={() => setDayType('1')}>어제의 운세</NavigationTitle>
+              <NavigationButton className={'bg-blue-600'} onClick={() => setDayType('1')}>
+                오늘
+              </NavigationButton>
+            </>
+          )}
+          {dayType === '1' && (
+            <>
+              <NavigationButton className={'bg-blue-600'} onClick={() => setDayType('0')}>
+                어제
+              </NavigationButton>
+              <NavigationTitle onClick={() => setDayType('1')}>오늘의 운세</NavigationTitle>
+              <NavigationButton className={'bg-blue-600'} onClick={() => setDayType('2')}>
+                내일
+              </NavigationButton>
+            </>
+          )}
+          {dayType === '2' && (
+            <>
+              <NavigationButton className={'bg-blue-600'} onClick={() => setDayType('1')}>
+                오늘
+              </NavigationButton>
+              <NavigationTitle onClick={() => setDayType('1')}>내일의 운세</NavigationTitle>
+              <NavigationButtonPadding>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </NavigationButtonPadding>
+            </>
+          )}
         </NavigationWrapper>
         <Header>
           <ZodiacAnimalWrapper>
-            <ZodiacAnimalButton>1</ZodiacAnimalButton>
-            <ZodiacAnimalButton>1</ZodiacAnimalButton>
-            <ZodiacAnimalButton>1</ZodiacAnimalButton>
-            <ZodiacAnimalButton>1</ZodiacAnimalButton>
-            <ZodiacAnimalButton>1</ZodiacAnimalButton>
-            <ZodiacAnimalButton>1</ZodiacAnimalButton>
-            <ZodiacAnimalButton>1</ZodiacAnimalButton>
-            <ZodiacAnimalButton>1</ZodiacAnimalButton>
+            <ZodiacAnimalButton
+              onClick={() => setTtiType('00')}
+              style={{ backgroundImage: `url(/img/mouse.png)` }}
+            ></ZodiacAnimalButton>
+            <ZodiacAnimalButton
+              onClick={() => setTtiType('01')}
+              style={{ backgroundImage: `url(/img/ox.png)` }}
+            ></ZodiacAnimalButton>
+            <ZodiacAnimalButton
+              onClick={() => setTtiType('02')}
+              style={{ backgroundImage: `url(/img/tiger.png)` }}
+            ></ZodiacAnimalButton>
+            <ZodiacAnimalButton
+              onClick={() => setTtiType('03')}
+              style={{ backgroundImage: `url(/img/rabbit.png)` }}
+            ></ZodiacAnimalButton>
+            <ZodiacAnimalButton
+              onClick={() => setTtiType('04')}
+              style={{ backgroundImage: `url(/img/dragon.png)` }}
+            ></ZodiacAnimalButton>
+            <ZodiacAnimalButton
+              onClick={() => setTtiType('05')}
+              style={{ backgroundImage: `url(/img/snake.png)` }}
+            ></ZodiacAnimalButton>
+            <ZodiacAnimalButton
+              onClick={() => setTtiType('06')}
+              style={{ backgroundImage: `url(/img/horse.png)` }}
+            ></ZodiacAnimalButton>
+            <ZodiacAnimalButton
+              onClick={() => setTtiType('07')}
+              style={{ backgroundImage: `url(/img/lamb.png)` }}
+            ></ZodiacAnimalButton>
+            <ZodiacAnimalButton
+              onClick={() => setTtiType('08')}
+              style={{ backgroundImage: `url(/img/monkey.png)` }}
+            ></ZodiacAnimalButton>
+            <ZodiacAnimalButton
+              onClick={() => setTtiType('09')}
+              style={{ backgroundImage: `url(/img/chicken.png)` }}
+            ></ZodiacAnimalButton>
+            <ZodiacAnimalButton
+              onClick={() => setTtiType('10')}
+              style={{ backgroundImage: `url(/img/dog.png)` }}
+            ></ZodiacAnimalButton>
+            <ZodiacAnimalButton
+              onClick={() => setTtiType('11')}
+              style={{ backgroundImage: `url(/img/pig.png)` }}
+            ></ZodiacAnimalButton>
           </ZodiacAnimalWrapper>
         </Header>
-        {response && response?.success && (
+        {isLoading && <ZodiacLoader/>}
+        {!isLoading && response && response?.success && (
           <ContentWrapper className={'bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500'}>
             <MainZodiacWrapper>
               <MainZodiacIcon>{response.data.mainFortuneType}</MainZodiacIcon>
@@ -46,7 +134,7 @@ const Zodiac = () => {
               {response.data.contents.map((fortune: any, index: number) => {
                 return (
                   <SubFortune key={index}>
-                    <SubFortuneTitle>{fortune.title}년생</SubFortuneTitle>
+                    <SubFortuneTitle>{fortune.title} 년생</SubFortuneTitle>
                     <SubFortuneDescription>{fortune.content}</SubFortuneDescription>
                   </SubFortune>
                 );
@@ -63,7 +151,6 @@ const PageWrapper = styled.div`
   position: relative;
   display: flex;
   width: 100%;
-  letter-spacing: 2px;
   font-size: 20px;
 `;
 
@@ -87,13 +174,28 @@ const NavigationWrapper = styled.div`
 
 const NavigationTitle = styled.div`
   margin: 0 auto;
+  font-weight: bold;
 `;
 
-const NavigationButton = styled.button`
+const NavigationButton = styled.button.attrs({
+  className: 'bg-blue-600'
+})`
   display: inline-flex;
-  padding: 10px 20px;
+  padding: 8px 16px;
   border-radius: 4px;
   justify-self: right;
+  border: 1px solid #ddd;
+  font-size: 14px;
+`;
+
+const NavigationButtonPadding = styled.button.attrs({
+  className: 'bg-blue-600'
+})`
+  display: inline-flex;
+  padding: 8px 16px;
+  border-radius: 4px;
+  justify-self: right;
+  font-size: 14px;
 `;
 
 const Header = styled.div`
@@ -114,7 +216,7 @@ const ZodiacAnimalWrapper = styled.ul`
 `;
 
 const ZodiacAnimalButton = styled.li`
-  margin: 0 4px;
+  margin: 0 8px;
   display: flex;
   width: 100px;
   min-width: 100px;
@@ -123,6 +225,7 @@ const ZodiacAnimalButton = styled.li`
   border: 1px solid black;
   justify-content: center;
   align-items: center;
+  background-size: contain;
 `;
 
 const ContentWrapper = styled.div`
@@ -153,6 +256,7 @@ const MainZodiacFortune = styled.div`
 `;
 
 const SubFortunesWrapper = styled.div`
+  padding-bottom: 60px;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -162,19 +266,26 @@ const SubFortunesWrapper = styled.div`
 `;
 
 const SubFortune = styled.div`
-  margin: 10px;
+  margin: 20px 16px 0;
   padding: 10px;
   display: flex;
   flex-direction: column;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 6px 7px 20px 0px rgba(0, 0, 0, 0.2);
 `;
 
 const SubFortuneTitle = styled.div`
   display: flex;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #000;
+  padding-bottom: 7px;
 `;
 
 const SubFortuneDescription = styled.div`
+  margin-top: 10px;
   display: flex;
+  font-size: 16px;
+  line-height: 18px;
 `;
 
 export default Zodiac;
