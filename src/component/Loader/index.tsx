@@ -10,17 +10,6 @@ export default () => {
   );
 };
 
-const LoaderAnimation = keyframes`
-  0% {
-    transition: scale( 1.0 );
-  }
-  50% {
-    transition: scale( 2.0 );
-  }
-  100% {
-    transition: scale( 1.0 );
-  }
-`;
 const rotate = keyframes`
   0% {
     transform: translate(-80px, 200px);
