@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ZodiacLoader from '../component/Loader';
+import Head from 'next/head';
 
 const Zodiac = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -13,10 +14,9 @@ const Zodiac = () => {
       .then(async (res) => {
         const result = await res.json();
         setResponse(result);
-        setTimeout(()=>{
+        setTimeout(() => {
           setIsLoading(false);
-        },1500);
-        
+        }, 1500);
       })
       .catch((e) => {
         console.log(e);
@@ -34,6 +34,9 @@ const Zodiac = () => {
 
   return (
     <PageWrapper>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+      </Head>
       <ZodiacWrapper>
         <NavigationWrapper>
           {dayType === '0' && (
@@ -122,7 +125,7 @@ const Zodiac = () => {
             ></ZodiacAnimalButton>
           </ZodiacAnimalWrapper>
         </Header>
-        {isLoading && <ZodiacLoader/>}
+        {isLoading && <ZodiacLoader />}
         {!isLoading && response && response?.success && (
           <ContentWrapper className={'bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500'}>
             <MainZodiacWrapper>
