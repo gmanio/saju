@@ -21,7 +21,6 @@ export default class MyDocument extends Document<Props> {
     return (
       <Html>
         <Head>
-          <meta name="viewport" content="initial-scale=1.0, width=device-width" />
           <meta data-react-helmet="true" property="og:image" content="" />
           <link rel="stylesheet" type="text/css" href="./css/normalize.css" />
           {this.props.styleTags}
