@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 
-export default () => {
+const Loader = () => {
   return (
     <>
       <BackgroundWrapper>
@@ -9,6 +9,8 @@ export default () => {
     </>
   );
 };
+
+export default Loader;
 
 const rotate = keyframes`
   0% {

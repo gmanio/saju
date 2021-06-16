@@ -19,10 +19,11 @@ export default class MyDocument extends Document<Props> {
 
   render() {
     return (
-      <Html>
+      <Html lang="ko">
         <Head>
           <meta data-react-helmet="true" property="og:image" content="" />
           <link rel="stylesheet" type="text/css" href="./css/normalize.css" />
+          <script data-ad-client="ca-pub-1573712325059891" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
           {this.props.styleTags}
         </Head>
         <body>
